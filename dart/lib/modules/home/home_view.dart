@@ -33,7 +33,7 @@ class _CalendarState extends State<Calendar> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text('Chuva ❤️ Flutter'),
+        title: const Text('Chuva ❤️ Flutter 1'),
       ),
       body: Center(
         child: Column(
