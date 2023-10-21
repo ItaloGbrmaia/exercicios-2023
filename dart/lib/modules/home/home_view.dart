@@ -3,6 +3,7 @@ import 'package:chuva_dart/shared/data/events_models.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:intl/intl.dart';
 
 class ChuvaDart extends StatelessWidget {
   final eventStore = HomeController();
@@ -130,6 +131,7 @@ class BodyWidget extends StatelessWidget {
 
   Future<void> _onrefresh() async {
     eventStore.loadData();
+    eventStore.selectedValue = "";
   }
 
   @override
@@ -158,7 +160,9 @@ class BodyWidget extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 0),
                 child: Column(
                   children: [
-                    const LabelTopWidget(),
+                    LabelTopWidget(
+                      eventStore: eventStore,
+                    ),
                     const SizedBox(
                       height: 5,
                     ),
@@ -203,8 +207,11 @@ class BodyWidget extends StatelessWidget {
 }
 
 class LabelTopWidget extends StatelessWidget {
+  final HomeController eventStore;
+
   const LabelTopWidget({
     super.key,
+    required this.eventStore,
   });
 
   @override
@@ -216,97 +223,149 @@ class LabelTopWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Container(
-            height: 50,
-            width: 60,
-            color: Colors.white,
-            child: const Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  "Nov",
+          GestureDetector(
+            onTap: () {
+              const String selectedValue = "";
+              eventStore.updateSelectedValue(selectedValue);
+              eventStore.loadData();
+            },
+            child: Container(
+              height: 50,
+              width: 60,
+              color: Colors.white,
+              child: const Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    "Nov",
+                    style: TextStyle(
+                      fontSize: 19,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                  Text(
+                    "2023",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          GestureDetector(
+            onTap: () {
+              const String selectedValue = "26";
+              eventStore.updateSelectedValue(selectedValue);
+              eventStore.loadData();
+            },
+            child: SizedBox(
+              height: 50,
+              width: 45,
+              child: Center(
+                child: Text(
+                  "26",
                   style: TextStyle(
-                    fontSize: 19,
-                    fontWeight: FontWeight.w400,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: eventStore.selectedValue == "26"
+                        ? Colors.white
+                        : Colors.white.withOpacity(0.3),
                   ),
                 ),
-                Text(
-                  "2023",
+              ),
+            ),
+          ),
+          GestureDetector(
+            onTap: () {
+              const String selectedValue = "27";
+              eventStore.updateSelectedValue(selectedValue);
+              eventStore.loadData();
+            },
+            child: SizedBox(
+              height: 50,
+              width: 45,
+              child: Center(
+                child: Text(
+                  "27",
                   style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: eventStore.selectedValue == "27"
+                        ? Colors.white
+                        : Colors.white.withOpacity(0.3),
                   ),
                 ),
-              ],
+              ),
             ),
           ),
-          const SizedBox(
-            height: 50,
-            width: 45,
-            child: Center(
-              child: Text(
-                "26",
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.white,
+          GestureDetector(
+            onTap: () {
+              const String selectedValue = "28";
+              eventStore.updateSelectedValue(selectedValue);
+              eventStore.loadData();
+            },
+            child: SizedBox(
+              height: 50,
+              width: 45,
+              child: Center(
+                child: Text(
+                  "28",
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: eventStore.selectedValue == "28"
+                        ? Colors.white
+                        : Colors.white.withOpacity(0.3),
+                  ),
                 ),
               ),
             ),
           ),
-          const SizedBox(
-            height: 50,
-            width: 45,
-            child: Center(
-              child: Text(
-                "27",
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.white,
+          GestureDetector(
+            onTap: () {
+              const String selectedValue = "29";
+              eventStore.updateSelectedValue(selectedValue);
+              eventStore.loadData();
+            },
+            child: SizedBox(
+              height: 50,
+              width: 45,
+              child: Center(
+                child: Text(
+                  "29",
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: eventStore.selectedValue == "29"
+                        ? Colors.white
+                        : Colors.white.withOpacity(0.3),
+                  ),
                 ),
               ),
             ),
           ),
-          const SizedBox(
-            height: 50,
-            width: 45,
-            child: Center(
-              child: Text(
-                "28",
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(
-            height: 50,
-            width: 45,
-            child: Center(
-              child: Text(
-                "29",
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(
-            height: 50,
-            width: 45,
-            child: Center(
-              child: Text(
-                "30",
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.white,
+          GestureDetector(
+            onTap: () {
+              const String selectedValue = "30";
+              eventStore.updateSelectedValue(selectedValue);
+              eventStore.loadData();
+            },
+            child: SizedBox(
+              height: 50,
+              width: 45,
+              child: Center(
+                child: Text(
+                  "30",
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: eventStore.selectedValue == "30"
+                        ? Colors.white
+                        : Colors.white.withOpacity(0.3),
+                  ),
                 ),
               ),
             ),
@@ -327,109 +386,124 @@ class CardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 4.0, right: 4.0, bottom: 4.0),
-      child: GestureDetector(
-        onTap: () => {
-          Modular.to.navigate('/details'),
-        },
-        child: Card(
-          elevation: 4,
-          child: SizedBox(
-            height: 100,
-            child: Row(
-              children: [
-                Expanded(
-                  flex: 1,
-                  child: Container(
-                    height: 100,
-                    width: 5,
-                    decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(5.0),
-                          bottomLeft: Radius.circular(5.0),
-                        ),
-                        color: Colors.red
-                        // color: index % 2 != 0
-                        //     ? const Color(0xFFc24ffe)
-                        //     : Colors.orange,
-                        ),
-                  ),
-                ),
-                Expanded(
-                  flex: 89,
-                  child: Container(
-                    height: 97,
-                    color: Colors.white,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(top: 5.0, left: 17),
-                          child: Text(
-                            "${event.start}",
-                            style: TextStyle(fontSize: 14),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(top: 5.0, left: 17),
-                          child: Text(
-                            event.title!.ptBr,
-                            style: const TextStyle(
-                              fontSize: 17,
-                              fontWeight: FontWeight.w500,
+    String? dataHoraString = event.start;
+    DateTime dataHora = DateTime.parse(dataHoraString!);
+    String dataHoraFormatada = DateFormat('dd HH:mm').format(dataHora);
+    String? dataHoraFim = event.end;
+    DateTime dataHoraFimm = DateTime.parse(dataHoraFim!);
+    String dataFinal = DateFormat('HH:mm').format(dataHoraFimm);
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 4.0, right: 4.0, bottom: 4.0),
+          child: GestureDetector(
+            onTap: () => {
+              Modular.to.navigate('/details'),
+            },
+            child: Card(
+              elevation: 4,
+              child: SizedBox(
+                height: 100,
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: Container(
+                        height: 100,
+                        width: 5,
+                        decoration: const BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(5.0),
+                              bottomLeft: Radius.circular(5.0),
                             ),
-                            maxLines: 2,
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(top: 4.0, left: 17),
-                          child: Text(
-                            event.people!.isNotEmpty
-                                ? event.people![0].name
-                                : "",
-                            style: const TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.grey),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Expanded(
-                  flex: 12,
-                  child: Container(
-                    height: 92,
-                    width: 5,
-                    decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(5.0),
-                        bottomRight: Radius.circular(5.0),
+                            color: Colors.red
+                            // color: index % 2 != 0
+                            //     ? const Color(0xFFc24ffe)
+                            //     : Colors.orange,
+                            ),
                       ),
-                      color: Colors.white,
                     ),
-                    child: const Column(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Icon(
-                            Icons.bookmark,
-                            size: 30,
-                            color: Color(0xFF7c90ac),
+                    Expanded(
+                      flex: 89,
+                      child: Container(
+                        height: 97,
+                        color: Colors.white,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(top: 5.0, left: 17),
+                              child: Text(
+                                "Dia: $dataHoraFormatada Ate $dataFinal",
+                                style: TextStyle(fontSize: 14),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(top: 5.0, left: 17),
+                              child: Text(
+                                event.title!.ptBr,
+                                style: const TextStyle(
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                maxLines: 2,
+                              ),
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 17.0, top: 4),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    event.people!.isNotEmpty
+                                        ? event.people![0].name
+                                        : "",
+                                    style: const TextStyle(
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.grey),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 12,
+                      child: Container(
+                        height: 92,
+                        width: 5,
+                        decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(5.0),
+                            bottomRight: Radius.circular(5.0),
                           ),
-                        )
-                      ],
+                          color: Colors.white,
+                        ),
+                        child: const Column(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Icon(
+                                Icons.bookmark,
+                                size: 30,
+                                color: Color(0xFF7c90ac),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
                     ),
-                  ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         ),
-      ),
+      ],
     );
   }
 }
