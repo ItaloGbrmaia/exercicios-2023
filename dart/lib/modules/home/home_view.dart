@@ -1,34 +1,36 @@
-import 'package:chuva_dart/modules/home/models_home.dart';
+import 'package:chuva_dart/modules/home/controllers/home.dart';
+import 'package:chuva_dart/shared/data/events_models.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 
-class ChuvaDart extends StatefulWidget {
-  const ChuvaDart({
-    Key? key,
-  }) : super(key: key);
-  // final EventData eventData;
+class ChuvaDart extends StatelessWidget {
+  final eventStore = HomeController();
 
+  ChuvaDart({super.key});
   @override
-  State<ChuvaDart> createState() => _ChuvaDartState();
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: EventListView(eventStore),
+    );
+  }
 }
 
-class _ChuvaDartState extends State<ChuvaDart> {
-  late List<EventData> events = [];
+class EventListView extends StatelessWidget {
+  final HomeController eventStore;
 
-  @override
-  void initState() {
-    super.initState();
-    fetchData();
-  }
+  const EventListView(this.eventStore, {super.key});
 
   @override
   Widget build(BuildContext context) {
+    eventStore.loadData();
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         foregroundColor: Colors.white,
-        backgroundColor: Colors.deepPurple,
+        backgroundColor: const Color(0xFF456189),
         title: const Padding(
-          padding: EdgeInsets.only(top: 10.0),
+          padding: EdgeInsets.only(top: 16.0),
           child: Column(
             children: [
               Text(
@@ -53,20 +55,22 @@ class _ChuvaDartState extends State<ChuvaDart> {
             ],
           ),
         ),
-        leading: IconButton(
-          onPressed: () => {},
-          icon: const Icon(Icons.arrow_back_ios_new),
+        leading: GestureDetector(
+          onTap: () => {
+            Modular.to.navigate('/'),
+          },
+          child: const Icon(Icons.arrow_back_ios),
         ),
         toolbarHeight: 100.0, // Aumenta a altura do AppBar
         bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(46.0),
+          preferredSize: const Size.fromHeight(42.0),
           child: SizedBox(
             height: 54,
             child: Column(
               children: [
                 SizedBox(
                   width: 350,
-                  height: 47.5,
+                  height: 45.5,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(20.0),
                     child: Container(
@@ -77,14 +81,14 @@ class _ChuvaDartState extends State<ChuvaDart> {
                           Padding(
                             padding: const EdgeInsets.all(4.0),
                             child: Container(
-                              height: 42,
-                              width: 48,
+                              height: 40,
+                              width: 46,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(25.0),
-                                color: Colors.deepPurple,
+                                color: const Color(0xFF2f6abd),
                               ),
                               child: const Icon(
-                                Icons.calendar_month,
+                                Icons.calendar_month_outlined,
                                 color: Colors.black,
                               ),
                             ),
@@ -95,7 +99,7 @@ class _ChuvaDartState extends State<ChuvaDart> {
                               child: Text(
                                 "Exibindo todas as atividades",
                                 style: TextStyle(
-                                  fontWeight: FontWeight.w400,
+                                  fontWeight: FontWeight.w500,
                                   fontSize: 16,
                                 ),
                               ),
@@ -111,27 +115,320 @@ class _ChuvaDartState extends State<ChuvaDart> {
           ),
         ),
       ),
-      body: ListView.builder(
-        itemCount: events.length, // Use o tamanho da lista de eventos
-        itemBuilder: (context, index) {
-          final item = events[index];
-          return Card(
-            child: Column(
-              children: [
-                ListTile(
-                  title: Text('Título ${item.id}'),
-                  subtitle: Text('Subtítulo $index'),
+      body: BodyWidget(eventStore: eventStore),
+    );
+  }
+}
+
+class BodyWidget extends StatelessWidget {
+  const BodyWidget({
+    Key? key,
+    required this.eventStore,
+  }) : super(key: key);
+
+  final HomeController eventStore;
+
+  Future<void> _onrefresh() async {
+    eventStore.loadData();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return RefreshIndicator(
+      triggerMode: RefreshIndicatorTriggerMode.onEdge,
+      edgeOffset: 30,
+      onRefresh: _onrefresh,
+      child: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        child: Center(
+          child: Observer(
+            builder: (context) {
+              if (eventStore.isLoading) {
+                return const Padding(
+                  padding: EdgeInsets.only(top: 18.0),
+                  child: Center(
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2.5,
+                      color: Color(0xFF2f6abd),
+                    ),
+                  ),
+                );
+              }
+              return Container(
+                padding: const EdgeInsets.only(top: 0),
+                child: Column(
+                  children: [
+                    const LabelTopWidget(),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    eventStore.event != null
+                        ? Column(
+                            children: eventStore.lista
+                                .map(
+                                  (evento) => Column(
+                                    children: [
+                                      CardWidget(
+                                        event: evento,
+                                      ),
+                                    ],
+                                  ),
+                                )
+                                .toList(),
+                          )
+                        : const Padding(
+                            padding: EdgeInsets.only(top: 10.0, bottom: 6.0),
+                            child: Column(
+                              children: [
+                                Text(
+                                  'Sem resultados no momento!',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                  ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Text(
-                    'Este é um texto breve para o Card $index.',
+              );
+            },
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class LabelTopWidget extends StatelessWidget {
+  const LabelTopWidget({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 50,
+      color: const Color(0xFF2f6abd),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            height: 50,
+            width: 60,
+            color: Colors.white,
+            child: const Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  "Nov",
+                  style: TextStyle(
+                    fontSize: 19,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                Text(
+                  "2023",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
               ],
             ),
-          );
+          ),
+          const SizedBox(
+            height: 50,
+            width: 45,
+            child: Center(
+              child: Text(
+                "26",
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 50,
+            width: 45,
+            child: Center(
+              child: Text(
+                "27",
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 50,
+            width: 45,
+            child: Center(
+              child: Text(
+                "28",
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 50,
+            width: 45,
+            child: Center(
+              child: Text(
+                "29",
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 50,
+            width: 45,
+            child: Center(
+              child: Text(
+                "30",
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class CardWidget extends StatelessWidget {
+  final EventData event;
+
+  const CardWidget({
+    super.key,
+    required this.event,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 4.0, right: 4.0, bottom: 4.0),
+      child: GestureDetector(
+        onTap: () => {
+          Modular.to.navigate('/details'),
         },
+        child: Card(
+          elevation: 4,
+          child: SizedBox(
+            height: 100,
+            child: Row(
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: Container(
+                    height: 100,
+                    width: 5,
+                    decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(5.0),
+                          bottomLeft: Radius.circular(5.0),
+                        ),
+                        color: Colors.red
+                        // color: index % 2 != 0
+                        //     ? const Color(0xFFc24ffe)
+                        //     : Colors.orange,
+                        ),
+                  ),
+                ),
+                Expanded(
+                  flex: 89,
+                  child: Container(
+                    height: 97,
+                    color: Colors.white,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(top: 5.0, left: 17),
+                          child: Text(
+                            "${event.start}",
+                            style: TextStyle(fontSize: 14),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 5.0, left: 17),
+                          child: Text(
+                            event.title!.ptBr,
+                            style: const TextStyle(
+                              fontSize: 17,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            maxLines: 2,
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 4.0, left: 17),
+                          child: Text(
+                            event.people!.isNotEmpty
+                                ? event.people![0].name
+                                : "",
+                            style: const TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.grey),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: 12,
+                  child: Container(
+                    height: 92,
+                    width: 5,
+                    decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(5.0),
+                        bottomRight: Radius.circular(5.0),
+                      ),
+                      color: Colors.white,
+                    ),
+                    child: const Column(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Icon(
+                            Icons.bookmark,
+                            size: 30,
+                            color: Color(0xFF7c90ac),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
