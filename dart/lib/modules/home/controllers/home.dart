@@ -15,16 +15,12 @@ abstract class _HomeController with Store {
   @observable
   bool isLoading = false;
 
-  // @observable
-  // String valor = "";
-
   @observable
   String selectedValue = "";
 
   @action
   void updateSelectedValue(String value) {
     selectedValue = value;
-    print("valor do controller agore e: ${value}");
   }
 
   Future<void> loadData() async {
@@ -53,7 +49,7 @@ abstract class _HomeController with Store {
       isLoading = false;
     } catch (e) {
       isLoading = false;
-      print('Erro durante a solicitação: $e');
+      // print('Erro durante a solicitação: $e');
     }
   }
 }

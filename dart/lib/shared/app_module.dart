@@ -12,15 +12,11 @@ class AppModule extends Module {
   List<ModularRoute> get routes => [
         ChildRoute(
           '/',
-          child: (_, __) => ChuvaDart(
-              // eventStore: Modular.get<HomeController>(),
-              ),
+          child: (_, __) => ChuvaDart(),
         ),
         ChildRoute(
           '/details',
-          child: (_, __) => const Details(
-              // eventStore: Modular.get<HomeController>(),
-              ),
+          child: (_, __) => const Details(),
         ),
       ];
 }
