@@ -1,5 +1,6 @@
 import 'package:chuva_dart/modules/details/details_view.dart';
 import 'package:chuva_dart/modules/home/home_view.dart';
+import 'package:chuva_dart/modules/routes/routes.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 class AppModule extends Module {
@@ -10,13 +11,9 @@ class AppModule extends Module {
 
   @override
   List<ModularRoute> get routes => [
-        ChildRoute(
-          '/',
-          child: (_, __) => ChuvaDart(),
-        ),
-        ChildRoute(
-          '/details',
-          child: (_, __) => const Details(),
+        ModuleRoute(
+          '/home',
+          module: HomeRoute(),
         ),
       ];
 }

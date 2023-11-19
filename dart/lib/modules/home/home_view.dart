@@ -33,7 +33,7 @@ class EventListView extends StatelessWidget {
         title: const TitleAppBar(),
         leading: GestureDetector(
           onTap: () => {
-            Modular.to.navigate('/'),
+            Modular.to.navigate('/home/'),
           },
           child: const Icon(Icons.arrow_back_ios),
         ),
